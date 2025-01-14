@@ -1,0 +1,8 @@
+{
+  "packages": [
+    "argocd@latest"
+  ],
+  "shell": {
+    "init_hook": "echo 'Argo CD CLI is now available! Run \\'argocd --help\\' to get started.'"
+  }
+}

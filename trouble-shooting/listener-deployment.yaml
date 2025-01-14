@@ -1,0 +1,22 @@
+# Netcat Listener Deployment Troubleshooting Aid
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netcat-listener
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netcat-listener
+  template:
+    metadata:
+      labels:
+        app: netcat-listener
+    spec:
+      containers:
+      - name: netcat-listener
+        image: nicolaka/netshoot
+        command: ["/bin/sh"]
+        args: ["-c", "nc -l -p 8080"]
+        ports:
+        - containerPort: 8080

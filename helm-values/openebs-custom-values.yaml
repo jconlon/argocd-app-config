@@ -1,0 +1,31 @@
+# OpenEBS Helm Custom Values
+
+# Just use the local lvm engine dont need others
+engines:
+  local:
+    zfs:
+      enabled: false
+  replicated:
+    mayastor:
+      enabled: false
+
+# localpv-provisioner:
+localprovisioner:
+  enabled: true
+  hostpathClass:
+    # If true, sets the openebs-hostpath StorageClass as the default StorageClass
+    isDefaultClass: true
+    # Path on the host where local volumes of this storage class are mounted under.
+    # NOTE: If not specified, this defaults to the value of localpv.basePath.
+    basePath: "/mnt/data-a/openebs/local-hostpath"
+    # Custom node affinity label(s) for example "openebs.io/node-affinity-value"
+    # that will be used instead of hostnames
+    # This helps in cases where the hostname changes when the node is removed and
+    # added back with the disks still intact.
+    nodeAffinityLabels:
+      - "openebs.io/node-type=storage"
+
+# OpenEBS LocalPV with LVM (optional)
+lvm-localpv:
+  enabled: false
+  deviceClass: []

@@ -1,0 +1,11 @@
+# Netcat Listener Service Troubleshooting Aid
+apiVersion: v1
+kind: Service
+metadata:
+  name: netcat-service
+spec:
+  selector:
+    app: netcat-listener
+  ports:
+  - port: 8080
+    targetPort: 8080

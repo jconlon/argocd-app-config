@@ -1,0 +1,11 @@
+# Troubleshooting Pod for Netcat Listener
+apiVersion: v1
+kind: Pod
+metadata:
+  name: troubleshoot-pod
+spec:
+  containers:
+  - name: troubleshoot
+    image: nicolaka/netshoot
+    command: ["/bin/bash"]
+    args: ["-c", "while true; do sleep 30; done;"]

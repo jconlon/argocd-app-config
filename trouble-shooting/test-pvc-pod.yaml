@@ -1,0 +1,17 @@
+# Test Pod with Persistent Volume Claim Troubleshooting Aid
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  containers:
+  - name: test-container
+    image: busybox
+    command: ['sh', '-c', 'echo "Hello, Kubernetes!" > /mnt/data/test.txt && sleep 3600']
+    volumeMounts:
+    - name: test-volume
+      mountPath: /mnt/data
+  volumes:
+  - name: test-volume
+    persistentVolumeClaim:
+      claimName: test-pvc

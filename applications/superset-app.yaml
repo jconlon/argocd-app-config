@@ -1,0 +1,26 @@
+# superset-app.yaml (in argocd namespace)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: superset
+  namespace: argocd
+spec:
+  destination:
+    namespace: superset
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: http://apache.github.io/superset/
+    chart: superset
+    targetRevision: superset-0.13.5
+    helm:
+      valuesFiles:
+      - helm-values/superset-custom-values.yaml
+  dependencies:
+  - name: openebs
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

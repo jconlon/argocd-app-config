@@ -1,0 +1,110 @@
+# Superset Helm Custom Values
+
+# Database configuration
+postgresql:
+  enabled: true
+  postgresqlPassword: "mySecurePassword"
+
+# Redis configuration
+redis:
+  enabled: true
+  password: "myRedisPassword"
+
+# Superset node configuration
+supersetNode:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 1
+      memory: 2Gi
+    requests:
+      cpu: 0.5
+      memory: 1Gi
+
+# Superset worker configuration
+supersetWorker:
+  replicaCount: 2
+
+# Enable Celery beat scheduler
+supersetCeleryBeat:
+  enabled: true
+
+# Load example data
+init:
+  loadExamples: true
+#   adminUser:
+#     username: admin
+#     firstname: Superset
+#     lastname: Admin
+#     email: admin@superset.com
+#     password: "admin"
+
+# # Configuration overrides
+# configOverrides:
+#   enable_proxy_fix: |
+#     ENABLE_PROXY_FIX = True
+#   feature_flags: |
+#     FEATURE_FLAGS = {
+#       "DYNAMIC_PLUGINS": True,
+#       "DASHBOARD_NATIVE_FILTERS": True
+#     }
+#   secret_key: |
+#     SECRET_KEY = 'YourSecureSecretKeyHere'
+
+configOverrides:
+  enable_proxy_fix: |
+    ENABLE_PROXY_FIX = True
+  feature_flags: |
+    FEATURE_FLAGS = {
+      "DYNAMIC_PLUGINS": True,
+      "DASHBOARD_NATIVE_FILTERS": True
+    }
+  secret: |
+    SECRET_KEY = 'MUDSHARK'
+
+# Additional environment variables
+extraEnv:
+  SMTP_HOST: smtp.gmail.com
+  SMTP_USER: jconlon62@gmail.com
+  SMTP_PORT: "587"
+  SMTP_MAIL_FROM: your_email@gmail.com
+
+extraSecretEnv:
+  SMTP_PASSWORD: "YourEmailPassword"
+
+# Persistence configuration
+# persistence:
+#   enabled: true
+#   size: 8Gi
+
+#  installs the sql drivers
+bootstrapScript: |
+  #!/bin/bash
+  apt-get update && apt-get install -y build-essential
+  pip install psycopg2==2.9.6 \
+    sqlalchemy-bigquery==1.6.1 \
+    prophet==1.1.6 \
+    elasticsearch-dbapi==0.2.5 &&\
+  if [ ! -f ~/bootstrap ]; then echo "Running Superset with uid {{ .Values.runAsUser }}" > ~/bootstrap; fi
+
+# Ingress configuration
+ingress:
+  enabled: true
+  annotations:
+    ingressClassName: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+  hosts:
+    - superset.local  # Replace with your desired hostname
+  path: /
+  tls:
+    - secretName: superset-tls
+      hosts:
+        - superset.local
+
+
+# Get the superset image
+image:
+  repository: apache/superset
+
+initImage:
+  repository: apache/superset
